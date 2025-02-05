@@ -2,16 +2,14 @@ package com.douglas.financial.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
 @Entity
-@Serializable
 data class Expense(
-    @SerialName("_id")
+    @SerializedName("_id")
     @PrimaryKey
     val id: String,
     val name: String,
-    val value: Double,
+    val value: Double = 0.0,
     val dueDate: Int
 )

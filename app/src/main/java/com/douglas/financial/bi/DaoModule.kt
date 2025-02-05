@@ -15,4 +15,8 @@ fun daoModule(applicationContext: Application) = module {
     factory {
         db.expenseDao()
     }
+
+    factory {
+        db.expensePaymentDao()
+    }
 }
