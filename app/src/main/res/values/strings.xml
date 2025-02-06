@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Financial</string>
+    <string name="home_total_expenses_label">Total Expenses</string>
+    <string name="home_total_pending_expenses_label">Pending Expenses</string>
 </resources>

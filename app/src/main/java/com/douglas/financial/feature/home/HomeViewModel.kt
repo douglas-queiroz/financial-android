@@ -7,6 +7,7 @@ import com.douglas.financial.data.local.ExpensePaymentDao
 import com.douglas.financial.data.remote.ExpensePayment
 import com.douglas.financial.model.Expense
 import com.douglas.financial.usecase.DownloadExpensesUseCase
+import com.douglas.financial.util.toBRLCurrency
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -30,8 +31,8 @@ class HomeViewModel(
                 return@combine Pair(total, totalToBePaid)
             }.collect {
                 _state.value = _state.value.copy(
-                    totalExpenses = it.first.toString(),
-                    totalExpensesToBePaid = it.second.toString()
+                    totalExpenses = it.first.toBRLCurrency(),
+                    totalExpensesToBePaid = it.second.toBRLCurrency()
                 )
             }
         }
