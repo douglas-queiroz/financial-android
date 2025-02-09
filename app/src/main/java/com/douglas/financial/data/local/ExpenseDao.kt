@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.douglas.financial.data.remote.ExpensePayment
+import com.douglas.financial.model.ExpensePayment
 import com.douglas.financial.model.Expense
 import kotlinx.coroutines.flow.Flow
 
@@ -24,4 +24,7 @@ interface ExpenseDao {
             "WHERE STRFTIME('%Y-%m', ExpensePayment.date) = STRFTIME('%Y-%m', 'now')"
     )
     fun getExpensesWithPayment(): Flow<Map<Expense, List<ExpensePayment>>>
+
+    @Query("SELECT * FROM expense WHERE id = :expenseId")
+    fun findById(expenseId: String): Expense
 }

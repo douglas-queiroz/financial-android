@@ -3,7 +3,7 @@ package com.douglas.financial.feature.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
@@ -22,13 +22,19 @@ fun HomeView(
     onEvent: (HomeContract.Event) -> Unit,
 ) {
     Scaffold { padding ->
-        Column(modifier = modifier.padding(padding)) {
+        Column(modifier = modifier.padding(padding)
+            .padding(20.dp)) {
             Row(
                 modifier = modifier
-                    .fillMaxSize()
-                    .padding(20.dp),
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                HomeBox(
+                    modifier = Modifier.weight(1f),
+                    label = stringResource(R.string.home_total_expenses_label),
+                    value = state.totalExpenses
+                )
                 HomeBox(
                     modifier = Modifier.weight(1f),
                     label = stringResource(R.string.home_total_pending_expenses_label),
@@ -41,11 +47,17 @@ fun HomeView(
                 )
             }
 
-            Button({
-                onEvent(HomeContract.Event.DownloadExpenses)
-            }) {
-                Text("Download Expenses")
+            Button(onClick = { onEvent(HomeContract.Event.DownloadExpenses) }) {
+                Text(text = "Download Expenses")
             }
+
+            HomeExpensesTable(
+                modifier = Modifier.fillMaxWidth(),
+                expensesToBePaid = state.expensesToBePaid,
+                onPaidClick = {
+                    onEvent(HomeContract.Event.MarkExpenseAsPaid(it.id))
+                }
+            )
         }
     }
 }
@@ -56,7 +68,21 @@ fun HomeViewPreview() {
     HomeView(
         state = HomeContract.State(
             totalExpenses = "R$ 320,23",
-            totalExpensesToBePaid = "R$ 102,98"
+            totalExpensesToBePaid = "R$ 102,98",
+            expensesToBePaid = listOf(
+                HomeContract.ExpensesToBePaid(
+                    id = "",
+                    description = "Internet",
+                    date = "10/05/2023",
+                    value = "R$ 99,90"
+                ),
+                HomeContract.ExpensesToBePaid(
+                    id = "",
+                    description = "Internet",
+                    date = "10/05/2023",
+                    value = "R$ 99,90"
+                ),
+            ),
         ),
         onEvent = {}
     )

@@ -1,14 +1,24 @@
 package com.douglas.financial.data.local.converter
 
 import androidx.room.TypeConverter
-import java.util.Date
+import com.douglas.financial.data.local.converter.DateConverter.Companion.DATE_FORMAT
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 class DateConverter {
 
-    @TypeConverter
-    fun fromDate(date: Date) = date.time
+    companion object {
+        const val DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
+    }
 
     @TypeConverter
-    fun toDate(timestamp: Long) = Date(timestamp)
+    fun fromDate(date: LocalDateTime): String = DateTimeFormatter.ofPattern(DATE_FORMAT).format(date)
 
+    @TypeConverter
+    fun toDate(strDate: String): LocalDateTime {
+        val formatter = DateTimeFormatter.ofPattern(DATE_FORMAT)
+        return LocalDateTime.parse(strDate, formatter)
+    }
 }

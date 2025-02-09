@@ -1,14 +1,14 @@
-package com.douglas.financial.data.remote
+package com.douglas.financial.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Date
+import java.time.LocalDateTime
 
 @Entity
 data class ExpensePayment(
     @PrimaryKey
     val id: String,
-    val date: Date,
+    val date: LocalDateTime,
     val value: Double,
     val expenseId: String,
 )
