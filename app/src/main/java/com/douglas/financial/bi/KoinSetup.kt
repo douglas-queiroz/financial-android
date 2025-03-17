@@ -12,6 +12,7 @@ fun setupDi(androidApplication: Application)  = startKoin {
         daoModule(androidApplication),
         apiModule,
         useCaseModule,
-        viewModelModule
+        viewModelModule,
+        utilModule
     ))
 }

@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HomeExpensesTableItem(
     modifier: Modifier = Modifier,
-    expenseToBePaid: HomeContract.ExpensesToBePaid,
-    onPaidClick: (HomeContract.ExpensesToBePaid) -> Unit
+    expenseToBePaid: HomeContract.ExpenseToBePaid,
+    onPaidClick: (HomeContract.ExpenseToBePaid) -> Unit
 ) {
     Row(
         modifier = modifier.fillMaxWidth().padding(6.dp),
@@ -53,7 +53,7 @@ fun HomeExpensesTableItem(
 @Composable
 fun HomeExpensesTableItemPreview() {
     HomeExpensesTableItem(
-        expenseToBePaid = HomeContract.ExpensesToBePaid(
+        expenseToBePaid = HomeContract.ExpenseToBePaid(
             id = "",
             description = "Internet",
             date = "10/05/2023",

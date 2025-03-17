@@ -14,10 +14,13 @@ interface ExpenseDao {
     fun getAll(): Flow<List<Expense>>
 
     @Query("SELECT * FROM expense WHERE id = :id")
-    fun getById(id: String): Expense
+    suspend fun getById(id: String): Expense
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(expense: List<Expense>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(expense: Expense)
 
     @Query("Select * from Expense " +
             "LEFT JOIN ExpensePayment ON Expense.id = ExpensePayment.expenseId " +
@@ -27,4 +30,7 @@ interface ExpenseDao {
 
     @Query("SELECT * FROM expense WHERE id = :expenseId")
     fun findById(expenseId: String): Expense
+
+    @Query("DELETE FROM Expense WHERE id = :expenseId")
+    suspend fun deleteByExpenseId(expenseId: String)
 }

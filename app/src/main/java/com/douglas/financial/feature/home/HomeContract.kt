@@ -4,10 +4,10 @@ class HomeContract {
     data class State(
         val totalExpensesToBePaid: String = "",
         val totalExpenses: String = "",
-        val expensesToBePaid: List<ExpensesToBePaid> = emptyList()
+        val expensesToBePaid: List<ExpenseToBePaid> = emptyList()
     )
 
-    data class ExpensesToBePaid(
+    data class ExpenseToBePaid(
         val id: String,
         val description: String,
         val date: String,

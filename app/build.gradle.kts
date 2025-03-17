@@ -81,6 +81,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.icon.extended)
+    implementation(libs.androidx.compose.navigation)
     implementation(libs.room.runtime)
     implementation(libs.room.coroutine)
     implementation(libs.kotlinx.serialization.json)
@@ -93,8 +95,12 @@ dependencies {
     implementation(libs.google.gson)
     implementation(libs.okhttp.logging)
     implementation(libs.retrofit.json.converter)
+    implementation(libs.coroutines.test)
+    implementation(libs.cash.turbine)
 
     testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockK)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

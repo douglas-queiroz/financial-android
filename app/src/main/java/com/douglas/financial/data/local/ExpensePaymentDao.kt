@@ -18,4 +18,6 @@ interface ExpensePaymentDao {
     @Query("SELECT * FROM ExpensePayment WHERE STRFTIME('%Y-%m', date) = STRFTIME('%Y-%m', 'now')")
     fun getPaymentOfCurrentMonth(): Flow<List<ExpensePayment>>
 
+    @Query("DELETE FROM ExpensePayment WHERE id = :paymentId")
+    suspend fun deleteById(paymentId: String)
 }
