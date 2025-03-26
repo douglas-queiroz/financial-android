@@ -4,11 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.douglas.financial.data.local.ExpenseDao
 import com.douglas.financial.data.local.ExpensePaymentDao
-import com.douglas.financial.model.Expense
-import com.douglas.financial.model.ExpensePayment
 import com.douglas.financial.usecase.MarkExpenseAsPaid
 import com.douglas.financial.util.toBRLCurrency
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -16,7 +13,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ExpenseViewModel(
     private val expenseDao: ExpenseDao,

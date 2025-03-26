@@ -1,6 +1,5 @@
 package com.douglas.financial.feature.home
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.douglas.financial.data.local.ExpenseDao
@@ -14,25 +13,24 @@ import com.douglas.financial.util.toBRLCurrency
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.DateTimeException
 import java.time.LocalDate
 
 class HomeViewModel(
-    expenseDao: ExpenseDao,
-    expensePaymentDao: ExpensePaymentDao,
+    private val expenseDao: ExpenseDao,
+    private val expensePaymentDao: ExpensePaymentDao,
     private val downloadExpensesUseCase: DownloadExpensesUseCase,
     private val markExpenseAsPaid: MarkExpenseAsPaid
 ): ViewModel() {
 
     private val _state = MutableStateFlow(HomeContract.State())
-    val state: StateFlow<HomeContract.State> = combine(
-        _state,
-        expenseDao.getAll(),
-        expensePaymentDao.getPaymentOfCurrentMonth(),
-        ::updateUIState
-    ).stateIn(
+    val state: StateFlow<HomeContract.State> = _state.onStart {
+        loadExpenses()
+    }.stateIn(
         scope = viewModelScope,
         started = kotlinx.coroutines.flow.SharingStarted.Lazily,
         initialValue = _state.value
@@ -45,21 +43,31 @@ class HomeViewModel(
         }
     }
 
-    @VisibleForTesting
-    fun updateUIState(
-        state: HomeContract.State,
-        expenses: List<Expense>,
-        payments: List<ExpensePayment>
-    ): HomeContract.State {
-        val total = calculateTotal(expenses)
-        val totalToBePaid = calculateTotalToBePaid(total, payments)
-        val expensesToBePaid = createExpensesToBePaid(expenses, payments)
+    private fun loadExpenses() {
+        viewModelScope.launch {
+            combine(
+                expenseDao.getAll(),
+                expensePaymentDao.getPaymentOfCurrentMonth()
+            ) { expenses, payments ->
+                val total = calculateTotal(expenses)
+                val totalToBePaid = calculateTotalToBePaid(total, payments)
+                val expensesToBePaid = createExpensesToBePaid(expenses, payments)
 
-        return state.copy(
-            totalExpenses = total.toBRLCurrency(),
-            totalExpensesToBePaid = totalToBePaid.toBRLCurrency(),
-            expensesToBePaid = expensesToBePaid
-        )
+                HomeContract.State(
+                    totalExpenses = total.toBRLCurrency(),
+                    totalExpensesToBePaid = totalToBePaid.toBRLCurrency(),
+                    expensesToBePaid = expensesToBePaid
+                )
+            }.collect { newState ->
+                _state.update {
+                    it.copy(
+                        totalExpenses = newState.totalExpenses,
+                        totalExpensesToBePaid = newState.totalExpensesToBePaid,
+                        expensesToBePaid = newState.expensesToBePaid
+                    )
+                }
+            }
+        }
     }
 
     private fun createExpensesToBePaid(
