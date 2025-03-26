@@ -12,34 +12,32 @@ import com.douglas.financial.usecase.MarkExpenseAsPaid
 import com.douglas.financial.util.format
 import com.douglas.financial.util.toBRLCurrency
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.DateTimeException
 import java.time.LocalDate
 
 class HomeViewModel(
+    expenseDao: ExpenseDao,
+    expensePaymentDao: ExpensePaymentDao,
     private val downloadExpensesUseCase: DownloadExpensesUseCase,
-    private val expenseDao: ExpenseDao,
-    private val expensePaymentDao: ExpensePaymentDao,
     private val markExpenseAsPaid: MarkExpenseAsPaid
 ): ViewModel() {
 
     private val _state = MutableStateFlow(HomeContract.State())
-    val state = _state.onStart {
-        combine(expenseDao.getAll(), expensePaymentDao.getPaymentOfCurrentMonth()) { expenses, payments ->
-            return@combine updateUIState(expenses, payments)
-        }.collect {
-            _state.value = it
-        }
-    }.stateIn(
+    val state: StateFlow<HomeContract.State> = combine(
+        _state,
+        expenseDao.getAll(),
+        expensePaymentDao.getPaymentOfCurrentMonth(),
+        ::updateUIState
+    ).stateIn(
         scope = viewModelScope,
         started = kotlinx.coroutines.flow.SharingStarted.Lazily,
-        initialValue = HomeContract.State()
+        initialValue = _state.value
     )
 
-    @VisibleForTesting
     fun onEvent(event: HomeContract.Event) {
         when(event) {
             is HomeContract.Event.DownloadExpenses -> downloadExpenses()
@@ -49,6 +47,7 @@ class HomeViewModel(
 
     @VisibleForTesting
     fun updateUIState(
+        state: HomeContract.State,
         expenses: List<Expense>,
         payments: List<ExpensePayment>
     ): HomeContract.State {
@@ -56,7 +55,7 @@ class HomeViewModel(
         val totalToBePaid = calculateTotalToBePaid(total, payments)
         val expensesToBePaid = createExpensesToBePaid(expenses, payments)
 
-        return _state.value.copy(
+        return state.copy(
             totalExpenses = total.toBRLCurrency(),
             totalExpensesToBePaid = totalToBePaid.toBRLCurrency(),
             expensesToBePaid = expensesToBePaid

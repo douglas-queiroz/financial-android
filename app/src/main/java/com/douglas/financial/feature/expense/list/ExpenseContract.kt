@@ -10,7 +10,6 @@ class ExpenseContract {
     )
 
     sealed class Events {
-        data object Sync: Events()
         data class OnMarkPaid(val expense: ExpenseItem): Events()
         data class OnMarkUnpaid(val expense: ExpenseItem): Events()
         data class OnDelete(val expense: ExpenseItem): Events()

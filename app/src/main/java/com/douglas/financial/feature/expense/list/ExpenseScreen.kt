@@ -7,12 +7,15 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ExpensesScreen(modifier: Modifier = Modifier, bottomBar: @Composable () -> Unit) {
     val viewModel = koinViewModel<ExpenseViewModel>()
+    val state by viewModel.state.collectAsState()
 
     Scaffold(
         bottomBar = bottomBar,
@@ -26,7 +29,7 @@ fun ExpensesScreen(modifier: Modifier = Modifier, bottomBar: @Composable () -> U
     ) {
         ExpenseView(
             modifier = modifier.padding(it),
-            state = viewModel.state,
+            state = state,
             onEvent = viewModel::onEvent,
         )
     }
