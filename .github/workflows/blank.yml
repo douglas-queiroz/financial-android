@@ -36,4 +36,4 @@ jobs:
           echo test, and deploy your project.
 
       - name: Run Unit Tests
-        run: ./gradlew testStagingDebugUnitTest
+        run: ./gradlew testReleaseUnitTest
