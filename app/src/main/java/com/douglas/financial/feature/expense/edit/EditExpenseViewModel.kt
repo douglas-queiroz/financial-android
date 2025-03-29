@@ -8,6 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.douglas.financial.data.local.ExpenseDao
 import com.douglas.financial.model.Expense
 import com.douglas.financial.util.toBRLCurrency
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -18,22 +22,29 @@ class EditExpenseViewModel(
 ): ViewModel() {
 
     private lateinit var expense: Expense
-    var state by mutableStateOf(EditExpenseContract.State())
+    private var _state = MutableStateFlow(EditExpenseContract.State())
+    val state: StateFlow<EditExpenseContract.State> = _state.asStateFlow()
 
     fun onEvent(event: EditExpenseContract.Event) {
         when(event) {
-            is EditExpenseContract.Event.OnNameChange -> { state = state.copy(name = event.name) }
+            is EditExpenseContract.Event.OnNameChange -> {
+                _state.update {
+                    it.copy(name = event.name)
+                }
+            }
             is EditExpenseContract.Event.OnValueChange -> {
-                state = state.copy(value = event.value)
+                _state.update {
+                    it.copy(value = event.value)
+                }
             }
             is EditExpenseContract.Event.OnDueDateChange -> {
-                state = state.copy(dueDate = event.dueDate)
+                _state.update {
+                    it.copy(dueDate = event.dueDate)
+                }
             }
             is EditExpenseContract.Event.Save -> save()
             is EditExpenseContract.Event.Cancel -> onDismiss()
         }
-        println("state = ${state.name}")
-        println("state = ${state.value}")
     }
 
     @OptIn(ExperimentalUuidApi::class)
@@ -49,20 +60,27 @@ class EditExpenseViewModel(
             expenseDao.getById(expenseId)
         }
 
-        state = state.copy(
-            name = expense.name,
-            value = expense.value.toBRLCurrency().replace("R$", "").trim(),
-            dueDate = expense.dueDate.toString()
-        )
+        _state.update {
+            it.copy(
+                name = expense.name,
+                value = expense.value.toBRLCurrency().replace("R$", "").trim(),
+                dueDate = expense.dueDate.toString()
+            )
+        }
     }
 
     private fun save() = viewModelScope.launch {
-        val value = state.value.replace(".", "").replace(",", ".").toDouble()
+        val value = _state
+            .value
+            .value
+            .replace(".", "")
+            .replace(",", ".")
+            .toDouble()
 
         expense = expense.copy(
-            name = state.name,
+            name = _state.value.name,
             value = value,
-            dueDate = state.dueDate.toInt()
+            dueDate = _state.value.dueDate.toInt()
         )
 
         expenseDao.insertAll(listOf(expense))
