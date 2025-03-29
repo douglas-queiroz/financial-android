@@ -95,12 +95,12 @@ dependencies {
     implementation(libs.google.gson)
     implementation(libs.okhttp.logging)
     implementation(libs.retrofit.json.converter)
-    implementation(libs.coroutines.test)
-    implementation(libs.cash.turbine)
 
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockK)
+    testImplementation(libs.cash.turbine)
+    testImplementation(libs.coroutines.test)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
