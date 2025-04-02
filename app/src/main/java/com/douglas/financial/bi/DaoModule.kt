@@ -15,8 +15,22 @@ fun daoModule(applicationContext: Application) = module {
     factory {
         db.expenseDao()
     }
-
     factory {
         db.expensePaymentDao()
+    }
+    factory {
+        db.assetDao()
+    }
+    factory {
+        db.assetTrackDao()
+    }
+    factory {
+        db.assetTradeDao()
+    }
+    factory {
+        db.currencyDao()
+    }
+    factory {
+        db.currencyExchangeRateTrackDao()
     }
 }
