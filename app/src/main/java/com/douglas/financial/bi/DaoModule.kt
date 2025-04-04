@@ -3,6 +3,7 @@ package com.douglas.financial.bi
 import android.app.Application
 import androidx.room.Room
 import com.douglas.financial.data.local.AppDatabase
+import com.douglas.financial.data.local.Migration2To3
 import org.koin.dsl.module
 
 fun daoModule(applicationContext: Application) = module {
@@ -10,7 +11,7 @@ fun daoModule(applicationContext: Application) = module {
    val db = Room.databaseBuilder(
         applicationContext,
         AppDatabase::class.java, "financial"
-    ).build()
+    ).addMigrations(Migration2To3).build()
 
     factory {
         db.expenseDao()

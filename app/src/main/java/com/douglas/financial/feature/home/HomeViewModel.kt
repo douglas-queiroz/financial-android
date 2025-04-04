@@ -6,6 +6,7 @@ import com.douglas.financial.data.local.ExpenseDao
 import com.douglas.financial.data.local.ExpensePaymentDao
 import com.douglas.financial.model.Expense
 import com.douglas.financial.model.ExpensePayment
+import com.douglas.financial.usecase.AddCurrenciesUseCase
 import com.douglas.financial.usecase.DownloadExpensesUseCase
 import com.douglas.financial.usecase.MarkExpenseAsPaid
 import com.douglas.financial.util.format
@@ -24,7 +25,8 @@ class HomeViewModel(
     private val expenseDao: ExpenseDao,
     private val expensePaymentDao: ExpensePaymentDao,
     private val downloadExpensesUseCase: DownloadExpensesUseCase,
-    private val markExpenseAsPaid: MarkExpenseAsPaid
+    private val markExpenseAsPaid: MarkExpenseAsPaid,
+    private val addCurrenciesUseCase: AddCurrenciesUseCase
 ): ViewModel() {
 
     private val _state = MutableStateFlow(HomeContract.State())
@@ -39,6 +41,7 @@ class HomeViewModel(
     fun onEvent(event: HomeContract.Event) {
         when(event) {
             is HomeContract.Event.DownloadExpenses -> downloadExpenses()
+            is HomeContract.Event.AddCurrencies -> viewModelScope.launch { addCurrenciesUseCase() }
             is HomeContract.Event.MarkExpenseAsPaid -> markAsPaid(event.expenseId)
         }
     }

@@ -16,6 +16,7 @@ class HomeContract {
 
     sealed class Event {
         data object DownloadExpenses : Event()
+        data object AddCurrencies : Event()
         data class MarkExpenseAsPaid(val expenseId: String) : Event()
     }
 }
