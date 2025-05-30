@@ -191,7 +191,7 @@ class ExpenseViewModelTest {
     @Test
     fun `When OnDismiss THEN dismiss edit dialog`() = runTest {
 
-        target.onEvent(ExpenseContract.Events.OnDismiss)
+        target.onEvent(ExpenseContract.Events.OnDismissEditDialog)
 
         target.state.test {
             val state1 = awaitItem()

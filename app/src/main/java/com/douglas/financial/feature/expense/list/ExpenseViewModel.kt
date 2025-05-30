@@ -40,7 +40,7 @@ class ExpenseViewModel(
             is ExpenseContract.Events.Edit -> {
                 _state.update { it.copy(showEditDialog = true, editExpenseId = event.expense.id) }
             }
-            is ExpenseContract.Events.OnDismiss -> {
+            is ExpenseContract.Events.OnDismissEditDialog -> {
                 _state.update { it.copy(showEditDialog = true, editExpenseId = null) }
             }
             is ExpenseContract.Events.AddExpense -> {

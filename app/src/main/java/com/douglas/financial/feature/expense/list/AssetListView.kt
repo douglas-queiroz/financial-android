@@ -17,13 +17,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.douglas.financial.feature.expense.edit.EditExpenseScreen
+import com.douglas.financial.feature.asset.edit.EditAssetScreen
+import com.douglas.financial.feature.asset.list.AssetListContract
+import com.douglas.financial.feature.asset.list.AssetListScreen
+import com.douglas.financial.feature.asset.list.AssetListViewItem
+import com.douglas.financial.ui.theme.FinancialTheme
+import kotlin.reflect.KFunction1
+
 
 @Composable
-fun ExpenseView(
-    modifier: Modifier = Modifier,
-    state: ExpenseContract.State,
-    onEvent: (ExpenseContract.Events) -> Unit
+fun AssetListView(
+    modifier: Modifier,
+    state: AssetListContract.UIState,
+    onEvent: (AssetListContract.Events) -> Unit
 ) {
     Box(modifier.fillMaxSize().padding(16.dp)) {
         Column(
@@ -35,7 +41,7 @@ fun ExpenseView(
                 Text(
                     modifier = Modifier.weight(1f),
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    text = "Expenses"
+                    text = "Asset"
                 )
 
                 Text(
@@ -53,38 +59,38 @@ fun ExpenseView(
             }
 
             Column {
-                state.expenses.forEach {
-                    ExpenseViewItem(
-                        expense = it,
+                state.list.forEach {
+                    AssetListViewItem(
+                        asset = it,
                         onEvent = onEvent
                     )
                 }
             }
         }
 
-        if (state.showEditDialog) {
+        state.editDialogId?.let {
             Dialog(
-                onDismissRequest = { onEvent(ExpenseContract.Events.OnDismissEditDialog) }
+                onDismissRequest = { onEvent(AssetListContract.Events.OnDismissEditDialog) }
             ) {
-                EditExpenseScreen(
-                    expenseId = state.editExpenseId,
-                    onDismiss = { onEvent(ExpenseContract.Events.OnDismissEditDialog) }
+                EditAssetScreen(
+                    assetId = state.editDialogId,
+                    onDismiss = { onEvent(AssetListContract.Events.OnDismissEditDialog) }
                 )
             }
         }
 
-        if (state.expenseToBeDeleted != null) {
+        if (state.assetToBeDeleted != null) {
             AlertDialog(
                 title = { Text("Delete") },
-                text = { Text("Deseja realmente deletar ${state.expenseToBeDeleted.name}?") },
+                text = { Text("Deseja realmente deletar ${state.assetToBeDeleted.name}?") },
                 onDismissRequest = {
-                    onEvent(ExpenseContract.Events.OnDeleteDialogClose)
+                    onEvent(AssetListContract.Events.OnDeleteDialogClose)
                 },
                 confirmButton = {
                     TextButton(
                         onClick = {
                             onEvent(
-                                ExpenseContract.Events.OnDeleteExpenseConfirmed(expense = state.expenseToBeDeleted)
+                                AssetListContract.Events.OnDeleteAssetConfirmed(asset = state.assetToBeDeleted)
                             )
                         }
                     ) {
@@ -94,7 +100,7 @@ fun ExpenseView(
                 dismissButton = {
                     TextButton(
                         onClick = {
-                            onEvent(ExpenseContract.Events.OnDeleteDialogClose)
+                            onEvent(AssetListContract.Events.OnDeleteDialogClose)
                         }
                     ) {
                         Text("Dismiss")
@@ -103,45 +109,16 @@ fun ExpenseView(
             )
         }
     }
-
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ExpenseViewPreview() {
-    ExpenseView(
-        state = ExpenseContract.State(
-            expenses = listOf(
-                ExpenseItem(
-                    id = "",
-                    name = "Internet",
-                    value = "R$ 100.000,00",
-                    dueDate = "10",
-                    paymentId = null
-                ),
-                ExpenseItem(
-                    id = "",
-                    name = "Internet",
-                    value = "R$ 100.000,00",
-                    dueDate = "10",
-                    paymentId = "1231231"
-                ),
-                ExpenseItem(
-                    id = "",
-                    name = "Internet",
-                    value = "R$ 100.000,00",
-                    dueDate = "10",
-                    paymentId = null
-                ),
-                ExpenseItem(
-                    id = "",
-                    name = "Internet",
-                    value = "R$ 100.000,00",
-                    dueDate = "10",
-                    paymentId = null
-                )
-            )
-        ),
-        onEvent = {}
-    )
+fun AssetListViewPreview() {
+    FinancialTheme {
+        AssetListView(
+            state = AssetListContract.UIState(),
+            onEvent = {},
+            modifier = Modifier
+        )
+    }
 }

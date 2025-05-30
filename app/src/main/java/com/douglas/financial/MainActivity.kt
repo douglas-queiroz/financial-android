@@ -14,6 +14,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.douglas.financial.feature.asset.list.AssetListScreen
 import com.douglas.financial.feature.expense.list.ExpensesScreen
 import com.douglas.financial.feature.home.HomeScreen
 import com.douglas.financial.ui.componentes.FinancialTabBar
@@ -53,7 +54,7 @@ class MainActivity : ComponentActivity() {
                         HomeScreen(bottomBar = bottomBar)
                     }
                     composable(Screen.Investments.name) {
-                        HomeScreen(bottomBar = bottomBar)
+                        AssetListScreen(bottomBar = bottomBar)
                     }
                     composable(Screen.Expenses.name) {
                         ExpensesScreen(bottomBar = bottomBar)

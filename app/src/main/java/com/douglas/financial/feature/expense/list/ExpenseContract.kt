@@ -14,7 +14,7 @@ class ExpenseContract {
         data class OnMarkUnpaid(val expense: ExpenseItem): Events()
         data class OnDelete(val expense: ExpenseItem): Events()
         data class Edit(val expense: ExpenseItem): Events()
-        data object OnDismiss: Events()
+        data object OnDismissEditDialog: Events()
         data object AddExpense: Events()
         data class OnDeleteExpenseConfirmed(val expense: ExpenseItem): Events()
         data object OnDeleteDialogClose: Events()
