@@ -6,8 +6,8 @@ import com.douglas.financial.model.AssetType
 class AssetTypeConverter {
 
     @TypeConverter
-    fun fromAssetType(assetType: AssetType): Int {
-        return assetType.id
+    fun fromAssetType(assetType: AssetType): String {
+        return assetType.id.toString()
     }
 
     @TypeConverter
