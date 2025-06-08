@@ -2,6 +2,7 @@ package com.douglas.financial.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.douglas.financial.data.local.AssetDao
 import com.douglas.financial.data.local.ExpenseDao
 import com.douglas.financial.data.local.ExpensePaymentDao
 import com.douglas.financial.model.Expense
@@ -26,7 +27,8 @@ class HomeViewModel(
     private val expensePaymentDao: ExpensePaymentDao,
     private val downloadExpensesUseCase: DownloadExpensesUseCase,
     private val markExpenseAsPaid: MarkExpenseAsPaid,
-    private val addCurrenciesUseCase: AddCurrenciesUseCase
+    private val addCurrenciesUseCase: AddCurrenciesUseCase,
+    private val assetDao: AssetDao
 ): ViewModel() {
 
     private val _state = MutableStateFlow(HomeContract.State())
@@ -50,20 +52,24 @@ class HomeViewModel(
         viewModelScope.launch {
             combine(
                 expenseDao.getAll(),
-                expensePaymentDao.getPaymentOfCurrentMonth()
-            ) { expenses, payments ->
-                val total = calculateTotal(expenses)
-                val totalToBePaid = calculateTotalToBePaid(total, payments)
-                val expensesToBePaid = createExpensesToBePaid(expenses, payments)
+                expensePaymentDao.getPaymentOfCurrentMonth(),
+                assetDao.getAll()
+            ) { expenses, payments, assets ->
+                val totalAssets = assets.sumOf { it.value * it.qtd }
+                val totalExpenses = calculateTotal(expenses)
+                val totalToBePaid = calculateTotalToBePaid(totalExpenses, payments)
+                val expensesListToBePaid = createExpensesToBePaid(expenses, payments)
 
                 HomeContract.State(
-                    totalExpenses = total.toBRLCurrency(),
+                    totalAssets = totalAssets.toBRLCurrency(),
+                    totalExpenses = totalExpenses.toBRLCurrency(),
                     totalExpensesToBePaid = totalToBePaid.toBRLCurrency(),
-                    expensesToBePaid = expensesToBePaid
+                    expensesToBePaid = expensesListToBePaid
                 )
             }.collect { newState ->
                 _state.update {
                     it.copy(
+                        totalAssets = newState.totalAssets,
                         totalExpenses = newState.totalExpenses,
                         totalExpensesToBePaid = newState.totalExpensesToBePaid,
                         expensesToBePaid = newState.expensesToBePaid

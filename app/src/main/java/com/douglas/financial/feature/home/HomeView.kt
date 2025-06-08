@@ -29,8 +29,8 @@ fun HomeView(
         ) {
             HomeBox(
                 modifier = Modifier.weight(1f),
-                label = stringResource(R.string.home_total_expenses_label),
-                value = state.totalExpenses
+                label = stringResource(R.string.home_total_assets_label),
+                value = state.totalAssets
             )
             HomeBox(
                 modifier = Modifier.weight(1f),
