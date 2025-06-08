@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.douglas.financial.ui.componentes.Dropdown
 
 @Composable
 fun EditAssetView(
@@ -33,7 +34,7 @@ fun EditAssetView(
         ) {
             Text(
                 modifier = Modifier.padding(10.dp),
-                text = "Cadastro de Despesa",
+                text = "Cadastro de Ativo",
                 style = MaterialTheme.typography.headlineSmall
             )
             OutlinedTextField(
@@ -50,6 +51,75 @@ fun EditAssetView(
                             color = MaterialTheme.colorScheme.error
                         )
                     }
+                }
+            )
+            OutlinedTextField(
+                label = { Text("Code") },
+                value = state.code,
+                onValueChange = {
+                    onEvent(EditAssetContract.Event.OnCodeChange(it))
+                },
+                isError = state.codeError != null,
+                supportingText = {
+                    if (state.codeError != null) {
+                        Text(
+                            text = state.codeError,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            )
+            OutlinedTextField(
+                label = { Text("Qtd") },
+                value = state.qtd,
+                onValueChange = {
+                    onEvent(EditAssetContract.Event.OnQtdChange(it))
+                },
+                isError = state.qtdError != null,
+                supportingText = {
+                    if (state.qtdError != null) {
+                        Text(
+                            text = state.qtdError,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            )
+
+            OutlinedTextField(
+                label = { Text("Valor") },
+                value = state.value,
+                onValueChange = {
+                    onEvent(EditAssetContract.Event.OnValueChange(it))
+                },
+                isError = state.valueError != null,
+                supportingText = {
+                    if (state.valueError != null) {
+                        Text(
+                            text = state.valueError,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            )
+
+            Dropdown(
+                title = "Currency",
+                value = state.currency,
+                items = state.currencyList,
+                errorMsg = state.currencyError,
+                onSelectItem = {
+                    onEvent(EditAssetContract.Event.OnSelectCurrency(it))
+                }
+            )
+
+            Dropdown(
+                title = "Asset Type",
+                value = state.assetType,
+                items = state.assetTypeList,
+                errorMsg = state.assetTypeError,
+                onSelectItem = {
+                    onEvent(EditAssetContract.Event.OnSelectAssetType(it))
                 }
             )
 

@@ -11,7 +11,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun EditAssetScreen(
     modifier: Modifier = Modifier,
-    assetId: String,
+    assetId: String?,
     onDismiss: () -> Unit
 ) {
     val viewModel = koinViewModel<EditAssetViewModel>(parameters = { parametersOf(onDismiss) })

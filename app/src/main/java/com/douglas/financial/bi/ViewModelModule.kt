@@ -13,5 +13,10 @@ val viewModelModule = module {
     viewModel { ExpenseViewModel(get(), get(), get()) }
     viewModel { params -> EditExpenseViewModel(get(), params.get()) }
     viewModel { AssetListViewModel(get()) }
-    viewModel { params -> EditAssetViewModel(get(), params.get()) }
+    viewModel { params -> EditAssetViewModel(
+            currencyDao = get(),
+            onDismiss = params.get(),
+            assetDao = get()
+        )
+    }
 }

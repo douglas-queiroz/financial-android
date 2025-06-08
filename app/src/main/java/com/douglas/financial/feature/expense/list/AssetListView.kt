@@ -68,7 +68,7 @@ fun AssetListView(
             }
         }
 
-        state.editDialogId?.let {
+        if (state.showEditDialog) {
             Dialog(
                 onDismissRequest = { onEvent(AssetListContract.Events.OnDismissEditDialog) }
             ) {

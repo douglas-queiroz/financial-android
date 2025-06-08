@@ -11,7 +11,7 @@ class AssetTypeConverter {
     }
 
     @TypeConverter
-    fun toAssetType(value: Int): AssetType {
-        return AssetType.entries.find { it.id == value }!!
+    fun toAssetType(value: String): AssetType {
+        return AssetType.entries.find { it.id.toString() == value }!!
     }
 }

@@ -49,13 +49,19 @@ class AssetListViewModel(
                 _state.update { it.copy(assetToBeDeleted = event.asset) }
             }
             is AssetListContract.Events.OnDismissEditDialog -> {
-                _state.update { it.copy(assetToBeDeleted = null) }
+                _state.update { it.copy(
+                    showEditDialog = false,
+                    editDialogId = null)
+                }
             }
             is AssetListContract.Events.OnEdit -> {
-                _state.update { it.copy(editDialogId = event.asset.name) }
+                _state.update { it.copy(
+                    showEditDialog = true,
+                    editDialogId = event.asset.id)
+                }
             }
             is AssetListContract.Events.AddAsset -> {
-                _state.update { it.copy(editDialogId = null) }
+                _state.update { it.copy(showEditDialog = true, editDialogId = null) }
             }
             is AssetListContract.Events.OnDeleteAssetConfirmed -> {
                 deleteAsset(event)

@@ -41,7 +41,7 @@ class ExpenseViewModel(
                 _state.update { it.copy(showEditDialog = true, editExpenseId = event.expense.id) }
             }
             is ExpenseContract.Events.OnDismissEditDialog -> {
-                _state.update { it.copy(showEditDialog = true, editExpenseId = null) }
+                _state.update { it.copy(showEditDialog = false, editExpenseId = null) }
             }
             is ExpenseContract.Events.AddExpense -> {
                 _state.update { it.copy(showEditDialog = true, editExpenseId = null) }
