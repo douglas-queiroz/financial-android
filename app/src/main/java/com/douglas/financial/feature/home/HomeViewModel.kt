@@ -116,7 +116,7 @@ class HomeViewModel(
         .map { expense ->
             val expenseDueDate = try {
                 LocalDate.of(now.year, now.month, expense.dueDate)
-            } catch (ex: DateTimeException) {
+            } catch (_: DateTimeException) {
                 LocalDate.of(now.year, now.month + 1, 1).minusDays(1)
             }
             HomeContract.ExpenseToBePaid(

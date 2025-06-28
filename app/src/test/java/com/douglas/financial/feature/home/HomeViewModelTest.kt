@@ -1,12 +1,15 @@
 package com.douglas.financial.feature.home
 
 import app.cash.turbine.test
+import com.douglas.financial.data.local.AssetDao
+import com.douglas.financial.data.local.CurrencyDao
 import com.douglas.financial.data.local.ExpenseDao
 import com.douglas.financial.data.local.ExpensePaymentDao
 import com.douglas.financial.model.Expense
 import com.douglas.financial.model.ExpensePayment
-import com.douglas.financial.usecase.DownloadExpensesUseCase
+import com.douglas.financial.usecase.AddCurrenciesUseCase
 import com.douglas.financial.usecase.MarkExpenseAsPaid
+import com.douglas.financial.usecase.UpdateAssetsValueUseCase
 import io.mockk.MockKAnnotations
 import io.mockk.coVerify
 import io.mockk.every
@@ -21,7 +24,7 @@ import java.time.LocalDateTime
 class HomeViewModelTest {
 
     @MockK(relaxed = true)
-    private lateinit var downloadExpensesUseCase: DownloadExpensesUseCase
+    private lateinit var updateAssetsValueUseCase: UpdateAssetsValueUseCase
 
     @MockK(relaxed = true)
     private lateinit var expenseDao: ExpenseDao
@@ -32,16 +35,28 @@ class HomeViewModelTest {
     @MockK(relaxed = true)
     private lateinit var markExpenseAsPaid: MarkExpenseAsPaid
 
+    @MockK(relaxed = true)
+    private lateinit var addCurrenciesUseCase: AddCurrenciesUseCase
+
+    @MockK(relaxed = true)
+    private lateinit var assetDao: AssetDao
+
+    @MockK(relaxed = true)
+    private lateinit var currencyDao: CurrencyDao
+
     private lateinit var target: HomeViewModel
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
         target = HomeViewModel(
-            downloadExpensesUseCase = downloadExpensesUseCase,
             expenseDao = expenseDao,
             expensePaymentDao = expensePaymentDao,
-            markExpenseAsPaid = markExpenseAsPaid
+            updateAssetsValueUseCase = updateAssetsValueUseCase,
+            markExpenseAsPaid = markExpenseAsPaid,
+            addCurrenciesUseCase = addCurrenciesUseCase,
+            assetDao = assetDao,
+            currencyDao = currencyDao
         )
     }
 
@@ -51,6 +66,7 @@ class HomeViewModelTest {
             listOf(Expense("id", "teste", 10.0, 1))
         )
         every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(emptyList())
+        every { assetDao.getAllFlow() } returns flowOf(emptyList())
 
         target.state.test {
             assertEquals("", awaitItem().totalExpenses)
@@ -67,6 +83,7 @@ class HomeViewModelTest {
         every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
             listOf(ExpensePayment("idpayment", LocalDateTime.now(), 5.0, "id"))
         )
+        every { assetDao.getAllFlow() } returns flowOf(emptyList())
 
         target.state.test {
             assertEquals("", awaitItem().totalExpenses)
@@ -83,6 +100,7 @@ class HomeViewModelTest {
         every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
             listOf(ExpensePayment("idpayment", LocalDateTime.now(), 5.0, "id"))
         )
+        every { assetDao.getAllFlow() } returns flowOf(emptyList())
 
         target.state.test {
             assertEquals("", awaitItem().totalExpensesToBePaid)
@@ -99,6 +117,7 @@ class HomeViewModelTest {
         every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
             emptyList()
         )
+        every { assetDao.getAllFlow() } returns flowOf(emptyList())
 
         target.state.test {
             assertEquals(emptyList<HomeContract.ExpenseToBePaid>(), awaitItem().expensesToBePaid)
@@ -115,6 +134,7 @@ class HomeViewModelTest {
         every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
             listOf(ExpensePayment("idpayment", LocalDateTime.now(), 10.0, "id"))
         )
+        every { assetDao.getAllFlow() } returns flowOf(emptyList())
 
         target.state.test {
             assertEquals(emptyList<HomeContract.ExpenseToBePaid>(), awaitItem().expensesToBePaid)
@@ -125,10 +145,10 @@ class HomeViewModelTest {
 
     @Test
     fun `When tap download expenses button THEN call download expenses use case`() = runTest {
-        target.onEvent(HomeContract.Event.DownloadExpenses)
+        target.onEvent(HomeContract.Event.DownloadPriceUpdate)
 
         coVerify {
-            downloadExpensesUseCase()
+            updateAssetsValueUseCase()
         }
     }
 

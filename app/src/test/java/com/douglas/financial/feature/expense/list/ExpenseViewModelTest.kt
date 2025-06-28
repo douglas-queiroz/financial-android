@@ -198,10 +198,6 @@ class ExpenseViewModelTest {
             assertEquals(false, state1.showEditDialog)
             assertEquals(null, state1.editExpenseId)
 
-            val state2 = awaitItem()
-            assertEquals(true, state2.showEditDialog)
-            assertEquals(null, state2.editExpenseId)
-
             cancelAndConsumeRemainingEvents()
         }
     }

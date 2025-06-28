@@ -1,6 +1,5 @@
 package com.douglas.financial.usecase
 
-import android.util.Log
 import com.douglas.financial.data.local.AssetDao
 import com.douglas.financial.data.local.AssetTrackDao
 import com.douglas.financial.data.local.CurrencyDao
