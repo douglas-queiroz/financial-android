@@ -90,7 +90,7 @@ class ExpenseViewModelTest {
         every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(emptyList())
 
         target.state.test {
-            assertEquals(emptyList<ExpenseItem>(), awaitItem().expenses)
+            assert(awaitItem().expenses.isEmpty())
             assertEquals("10", awaitItem().expenses[0].dueDate)
             cancelAndConsumeRemainingEvents()
         }
