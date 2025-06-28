@@ -10,9 +10,9 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-val passwordsPropertiesFile = rootProject.file("app/setup.properties")
-val passwordsProperties = Properties()
-passwordsProperties.load(FileInputStream(passwordsPropertiesFile))
+val setupPropertiesFile = rootProject.file("app/setup.properties")
+val setupProperties = Properties()
+setupProperties.load(FileInputStream(setupPropertiesFile))
 
 android {
     namespace = "com.douglas.financial"
@@ -33,7 +33,8 @@ android {
 
         buildFeatures.buildConfig = true
 
-        buildConfigField("String", "SERVER_URL", passwordsProperties.getProperty("server_url"))
+        buildConfigField("String", "SERVER_URL", setupProperties.getProperty("server_url"))
+        buildConfigField("String", "YFINANCE_KEY", setupProperties.getProperty("yfinance_key"))
     }
 
     buildTypes {

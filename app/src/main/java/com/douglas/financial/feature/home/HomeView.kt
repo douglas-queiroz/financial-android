@@ -45,8 +45,8 @@ fun HomeView(
         }
 
         Row {
-            Button(onClick = { onEvent(HomeContract.Event.DownloadExpenses) }) {
-                Text(text = "Download Expenses")
+            Button(onClick = { onEvent(HomeContract.Event.DownloadPriceUpdate) }) {
+                Text(text = "Download Price Update")
             }
 
             Button(onClick = { onEvent(HomeContract.Event.AddCurrencies) }) {

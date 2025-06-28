@@ -10,12 +10,12 @@ import com.douglas.financial.model.Currency
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.UUID
 
 class EditAssetViewModel(
     private val currencyDao: CurrencyDao,
@@ -97,12 +97,12 @@ class EditAssetViewModel(
     fun setAsset(assetId: String?) = viewModelScope.launch {
         asset = if (assetId == null) {
             Asset(
-                id = "",
+                id = UUID.randomUUID().toString(),
                 code = "",
                 name = "",
                 qtd = 0.0,
                 value = 0.0,
-                currencyId = "",
+                currencyId = currencies.first().id,
                 type = AssetType.STOCK
             )
         } else {
@@ -128,13 +128,7 @@ class EditAssetViewModel(
 
     private fun save() = viewModelScope.launch {
         withContext(IO) {
-
-            if (asset.id.isEmpty()) {
-                assetDao.insert(asset = asset)
-            } else {
-                assetDao.update(asset = asset)
-            }
-
+            assetDao.insertOrUpdate(asset = asset)
             onDismiss()
         }
     }

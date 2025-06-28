@@ -8,5 +8,5 @@ import com.douglas.financial.model.CurrencyExchangeRateTrack
 interface CurrencyExchangeRateTrackDao {
 
     @Insert
-    suspend fun insertAll(exchangeRateList: List<CurrencyExchangeRateTrack>)
+    suspend fun insert(exchangeRate: CurrencyExchangeRateTrack)
 }

@@ -25,7 +25,7 @@ class AssetListViewModel(
 
     private fun loadAssets() {
         viewModelScope.launch {
-            assetDao.getAll().collect { assets ->
+            assetDao.getAllFlow().collect { assets ->
                 val list = assets.map {
                     val total = it.qtd * it.value
                     AssetItem(

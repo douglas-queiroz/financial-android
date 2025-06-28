@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "d51777c4be8264868d512fd391edacab",
+    "identityHash": "3dc238cb27dfb787a0165e662b5a5865",
     "entities": [
       {
         "tableName": "Expense",
@@ -277,8 +277,15 @@
       },
       {
         "tableName": "CurrencyExchangeRateTrack",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`currencyIdFrom` TEXT NOT NULL, `currencyIdTo` TEXT NOT NULL, `exchangeRate` REAL NOT NULL, `date` TEXT NOT NULL, PRIMARY KEY(`currencyIdFrom`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL DEFAULT '1', `currencyIdFrom` TEXT NOT NULL, `currencyIdTo` TEXT NOT NULL, `exchangeRate` REAL NOT NULL, `date` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'1'"
+          },
           {
             "fieldPath": "currencyIdFrom",
             "columnName": "currencyIdFrom",
@@ -307,7 +314,7 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "currencyIdFrom"
+            "id"
           ]
         },
         "indices": [],
@@ -317,7 +324,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd51777c4be8264868d512fd391edacab')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3dc238cb27dfb787a0165e662b5a5865')"
     ]
   }
 }

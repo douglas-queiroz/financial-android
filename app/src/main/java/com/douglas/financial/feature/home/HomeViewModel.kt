@@ -3,15 +3,19 @@ package com.douglas.financial.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.douglas.financial.data.local.AssetDao
+import com.douglas.financial.data.local.CurrencyDao
 import com.douglas.financial.data.local.ExpenseDao
 import com.douglas.financial.data.local.ExpensePaymentDao
+import com.douglas.financial.model.Asset
+import com.douglas.financial.model.Currency
 import com.douglas.financial.model.Expense
 import com.douglas.financial.model.ExpensePayment
 import com.douglas.financial.usecase.AddCurrenciesUseCase
-import com.douglas.financial.usecase.DownloadExpensesUseCase
 import com.douglas.financial.usecase.MarkExpenseAsPaid
+import com.douglas.financial.usecase.UpdateAssetsValueUseCase
 import com.douglas.financial.util.format
 import com.douglas.financial.util.toBRLCurrency
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -19,16 +23,18 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.DateTimeException
 import java.time.LocalDate
 
 class HomeViewModel(
     private val expenseDao: ExpenseDao,
     private val expensePaymentDao: ExpensePaymentDao,
-    private val downloadExpensesUseCase: DownloadExpensesUseCase,
+    private val updateAssetsValueUseCase: UpdateAssetsValueUseCase,
     private val markExpenseAsPaid: MarkExpenseAsPaid,
     private val addCurrenciesUseCase: AddCurrenciesUseCase,
-    private val assetDao: AssetDao
+    private val assetDao: AssetDao,
+    private val currencyDao: CurrencyDao
 ): ViewModel() {
 
     private val _state = MutableStateFlow(HomeContract.State())
@@ -42,7 +48,7 @@ class HomeViewModel(
 
     fun onEvent(event: HomeContract.Event) {
         when(event) {
-            is HomeContract.Event.DownloadExpenses -> downloadExpenses()
+            is HomeContract.Event.DownloadPriceUpdate -> updateAssetsValues()
             is HomeContract.Event.AddCurrencies -> viewModelScope.launch { addCurrenciesUseCase() }
             is HomeContract.Event.MarkExpenseAsPaid -> markAsPaid(event.expenseId)
         }
@@ -53,9 +59,9 @@ class HomeViewModel(
             combine(
                 expenseDao.getAll(),
                 expensePaymentDao.getPaymentOfCurrentMonth(),
-                assetDao.getAll()
+                assetDao.getAllFlow()
             ) { expenses, payments, assets ->
-                val totalAssets = assets.sumOf { it.value * it.qtd }
+                val totalAssets = calculateTotalAssets(assets)
                 val totalExpenses = calculateTotal(expenses)
                 val totalToBePaid = calculateTotalToBePaid(totalExpenses, payments)
                 val expensesListToBePaid = createExpensesToBePaid(expenses, payments)
@@ -75,6 +81,23 @@ class HomeViewModel(
                         expensesToBePaid = newState.expensesToBePaid
                     )
                 }
+            }
+        }
+    }
+
+    private suspend fun calculateTotalAssets(assets: List<Asset>): Double {
+        val currencies: List<Currency>
+        withContext(IO) {
+             currencies = currencyDao.getAll()
+        }
+
+        return currencies.sumOf { currency ->
+            val assetsByCurrency = assets.filter { it.currencyId == currency.id }
+            val totalByCurrency = assetsByCurrency.sumOf { it.value * it.qtd }
+            if (currency.isBase) {
+                totalByCurrency
+            } else {
+                totalByCurrency * currency.exchangeRate
             }
         }
     }
@@ -105,8 +128,8 @@ class HomeViewModel(
         }
     }
 
-    private fun downloadExpenses() = viewModelScope.launch {
-        downloadExpensesUseCase()
+    private fun updateAssetsValues() = viewModelScope.launch {
+        updateAssetsValueUseCase()
     }
 
     private fun markAsPaid(expenseId: String) = viewModelScope.launch {

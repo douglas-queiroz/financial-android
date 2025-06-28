@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,10 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.douglas.financial.feature.asset.edit.EditAssetScreen
 import com.douglas.financial.feature.asset.list.AssetListContract
-import com.douglas.financial.feature.asset.list.AssetListScreen
 import com.douglas.financial.feature.asset.list.AssetListViewItem
 import com.douglas.financial.ui.theme.FinancialTheme
-import kotlin.reflect.KFunction1
 
 
 @Composable
@@ -58,10 +57,10 @@ fun AssetListView(
                 )
             }
 
-            Column {
-                state.list.forEach {
+            LazyColumn {
+                items(state.list.size) {
                     AssetListViewItem(
-                        asset = it,
+                        asset = state.list[it],
                         onEvent = onEvent
                     )
                 }
