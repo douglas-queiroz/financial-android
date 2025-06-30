@@ -116,33 +116,33 @@ class ExpenseViewModelTest {
         }
     }
 
-//    @Test
-//    fun `When load a expense with payment THEN the shown expense has paymentId`() = runTest {
-//        val expenseId = "expenseId"
-//        val paymentId = "paymentId"
-//        every { expenseDao.getAll() } returns flowOf(
-//            listOf(Expense(
-//                id = expenseId,
-//                name = "test",
-//                value = 10.0,
-//                dueDate = 10
-//            ))
-//        )
-//        every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
-//            listOf(ExpensePayment(
-//                id = paymentId,
-//                date = LocalDateTime.now(),
-//                value = 10.0,
-//                expenseId = expenseId
-//            ))
-//        )
-//
-//        target.state.test {
-//            assertEquals(emptyList<ExpenseItem>(), awaitItem().expenses)
-//            assertEquals(paymentId, awaitItem().expenses[0].paymentId)
-//            cancelAndConsumeRemainingEvents()
-//        }
-//    }
+    @Test
+    fun `When load a expense with payment THEN the shown expense has paymentId`() = runTest {
+        val expenseId = "expenseId"
+        val paymentId = "paymentId"
+        every { expenseDao.getAll() } returns flowOf(
+            listOf(Expense(
+                id = expenseId,
+                name = "test",
+                value = 10.0,
+                dueDate = 10
+            ))
+        )
+        every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
+            listOf(ExpensePayment(
+                id = paymentId,
+                date = LocalDateTime.now(),
+                value = 10.0,
+                expenseId = expenseId
+            ))
+        )
+
+        target.state.test {
+            assertEquals(emptyList<ExpenseItem>(), awaitItem().expenses)
+            assertEquals(paymentId, awaitItem().expenses[0].paymentId)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
 
     @Test
     fun `When tap paid button ADD THEN show a dialog`() = runTest {
@@ -168,25 +168,25 @@ class ExpenseViewModelTest {
         }
     }
 
-//    @Test
-//    fun `When tap button Edit THEN show edit dialog`() = runTest {
-//        val expenseItem = mockk<ExpenseItem>()
-//        val expenseId = "ExpenseId"
-//        every { expenseItem.id } returns expenseId
-//        target.onEvent(ExpenseContract.Events.Edit(expenseItem))
-//
-//        target.state.test {
-//            val state1 = awaitItem()
-//            assertEquals(false, state1.showEditDialog)
-//            assertEquals(null, state1.editExpenseId)
-//
-//            val state2 = awaitItem()
-//            assertEquals(true, state2.showEditDialog)
-//            assertEquals(expenseId, state2.editExpenseId)
-//
-//            cancelAndConsumeRemainingEvents()
-//        }
-//    }
+    @Test
+    fun `When tap button Edit THEN show edit dialog`() = runTest {
+        val expenseItem = mockk<ExpenseItem>()
+        val expenseId = "ExpenseId"
+        every { expenseItem.id } returns expenseId
+        target.onEvent(ExpenseContract.Events.Edit(expenseItem))
+
+        target.state.test {
+            val state1 = awaitItem()
+            assertEquals(false, state1.showEditDialog)
+            assertEquals(null, state1.editExpenseId)
+
+            val state2 = awaitItem()
+            assertEquals(true, state2.showEditDialog)
+            assertEquals(expenseId, state2.editExpenseId)
+
+            cancelAndConsumeRemainingEvents()
+        }
+    }
 
     @Test
     fun `When OnDismiss THEN dismiss edit dialog`() = runTest {
@@ -202,22 +202,22 @@ class ExpenseViewModelTest {
         }
     }
 
-//    @Test
-//    fun `When AddExpense THEN show edit dialog with no expenseId`() = runTest {
-//        target.onEvent(ExpenseContract.Events.AddExpense)
-//
-//        target.state.test {
-//            val state1 = awaitItem()
-//            assertEquals(false, state1.showEditDialog)
-//            assertEquals(null, state1.editExpenseId)
-//
-//            val state2 = awaitItem()
-//            assertEquals(true, state2.showEditDialog)
-//            assertEquals(null, state2.editExpenseId)
-//
-//            cancelAndConsumeRemainingEvents()
-//        }
-//    }
+    @Test
+    fun `When AddExpense THEN show edit dialog with no expenseId`() = runTest {
+        target.onEvent(ExpenseContract.Events.AddExpense)
+
+        target.state.test {
+            val state1 = awaitItem()
+            assertEquals(false, state1.showEditDialog)
+            assertEquals(null, state1.editExpenseId)
+
+            val state2 = awaitItem()
+            assertEquals(true, state2.showEditDialog)
+            assertEquals(null, state2.editExpenseId)
+
+            cancelAndConsumeRemainingEvents()
+        }
+    }
 
     @Test
     fun `When OnDeleteDialogClose THEN dismiss deleted dialog`() = runTest {
