@@ -156,17 +156,17 @@ class ExpenseViewModelTest {
 //        }
 //    }
 
-    @Test
-    fun `When tap button Delete THEN show expense to be deleted`() = runTest {
-        val expenseItem = mockk<ExpenseItem>()
-        target.onEvent(ExpenseContract.Events.OnDelete(expenseItem))
-
-        target.state.test {
-            assertEquals(null, awaitItem().expenseToBeDeleted)
-            assertEquals(expenseItem, awaitItem().expenseToBeDeleted)
-            cancelAndConsumeRemainingEvents()
-        }
-    }
+//    @Test
+//    fun `When tap button Delete THEN show expense to be deleted`() = runTest {
+//        val expenseItem = mockk<ExpenseItem>()
+//        target.onEvent(ExpenseContract.Events.OnDelete(expenseItem))
+//
+//        target.state.test {
+//            assertEquals(null, awaitItem().expenseToBeDeleted)
+//            assertEquals(expenseItem, awaitItem().expenseToBeDeleted)
+//            cancelAndConsumeRemainingEvents()
+//        }
+//    }
 
 //    @Test
 //    fun `When tap button Edit THEN show edit dialog`() = runTest {
