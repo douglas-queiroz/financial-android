@@ -23,13 +23,8 @@ jobs:
           distribution: 'temurin'
           java-version: '23.0.1'
 
-      - name: Setup Gradle
-          uses: gradle/actions/setup-gradle@v3
-
       - name: Run Unit Tests
-        run: |
-        chmod +x gradlew
-        ./gradlew test --stacktrace
+        run: chmod +x gradlew && ./gradlew test --stacktrace
 
       # Optional: Upload test reports to GitHub Actions
       - name: Upload test results
