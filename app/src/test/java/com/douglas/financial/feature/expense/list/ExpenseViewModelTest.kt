@@ -17,6 +17,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.time.LocalDateTime
+import java.util.Locale
+import java.util.TimeZone
 
 class ExpenseViewModelTest {
 
@@ -33,6 +35,8 @@ class ExpenseViewModelTest {
 
     @Before
     fun setUp() {
+        Locale.setDefault(Locale.US)
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
         MockKAnnotations.init(this)
         target = ExpenseViewModel(
             expenseDao = expenseDao,
