@@ -110,8 +110,14 @@ class ExpenseViewModelTest {
         every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(emptyList())
 
         target.state.test {
-            assertEquals(emptyList<ExpenseItem>(), awaitItem().expenses)
-            assertEquals(null, awaitItem().expenses[0].paymentId)
+            var actual = awaitItem()
+            println("Actual1: '$actual'")
+            assertEquals(emptyList<ExpenseItem>(), actual.expenses)
+
+            actual = awaitItem()
+            println("Actual2: '$actual'")
+            assertEquals(null, actual.expenses[0].paymentId)
+
             cancelAndConsumeRemainingEvents()
         }
     }

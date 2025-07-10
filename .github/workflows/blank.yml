@@ -23,6 +23,13 @@ jobs:
           distribution: 'temurin'
           java-version: '23.0.1'
 
+      - name: Print environment info
+        run: |
+          java -version
+          locale
+          date
+          uname -a
+
       - name: Grant execute permission to Gradlew
         run: chmod +x ./gradlew
 
