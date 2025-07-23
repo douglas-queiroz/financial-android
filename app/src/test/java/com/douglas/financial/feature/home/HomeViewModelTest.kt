@@ -60,106 +60,106 @@ class HomeViewModelTest {
         )
     }
 
-//    @Test
-//    fun `When a 10 value expense THEN total expenses is R$ 10,00`() = runTest {
-//        every { expenseDao.getAll() } returns flowOf(
-//            listOf(Expense("id", "teste", 10.0, 1))
-//        )
-//        every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(emptyList())
-//        every { assetDao.getAllFlow() } returns flowOf(emptyList())
-//
-//        target.state.test {
-//            assertEquals("", awaitItem().totalExpenses)
-//            assertEquals("R$ 10,00", awaitItem().totalExpenses)
-//            cancelAndConsumeRemainingEvents()
-//        }
-//    }
-//
-//    @Test
-//    fun `When a 10 value expense and a 5 value payment THEN total expenses is R$ 10,00`() = runTest {
-//        every { expenseDao.getAll() } returns flowOf(
-//            listOf(Expense("id", "teste", 10.0, 1))
-//        )
-//        every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
-//            listOf(ExpensePayment("idpayment", LocalDateTime.now(), 5.0, "id"))
-//        )
-//        every { assetDao.getAllFlow() } returns flowOf(emptyList())
-//
-//        target.state.test {
-//            assertEquals("", awaitItem().totalExpenses)
-//            assertEquals("R$ 10,00", awaitItem().totalExpenses)
-//            cancelAndConsumeRemainingEvents()
-//        }
-//    }
-//
-//    @Test
-//    fun `When a 10 value expense and a 5 value payment THEN total to be paid is R$ 5,00`() = runTest {
-//        every { expenseDao.getAll() } returns flowOf(
-//            listOf(Expense("id", "teste", 10.0, 1))
-//        )
-//        every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
-//            listOf(ExpensePayment("idpayment", LocalDateTime.now(), 5.0, "id"))
-//        )
-//        every { assetDao.getAllFlow() } returns flowOf(emptyList())
-//
-//        target.state.test {
-//            assertEquals("", awaitItem().totalExpensesToBePaid)
-//            assertEquals("R$ 5,00", awaitItem().totalExpensesToBePaid)
-//            cancelAndConsumeRemainingEvents()
-//        }
-//    }
-//
-//    @Test
-//    fun `When a 10 value expense has no payment THEN show a expense with R$ 10,00`() = runTest {
-//        every { expenseDao.getAll() } returns flowOf(
-//            listOf(Expense("id", "teste", 10.0, 1))
-//        )
-//        every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
-//            emptyList()
-//        )
-//        every { assetDao.getAllFlow() } returns flowOf(emptyList())
-//
-//        target.state.test {
-//            assertEquals(emptyList<HomeContract.ExpenseToBePaid>(), awaitItem().expensesToBePaid)
-//            assertEquals("R$ 10,00", awaitItem().expensesToBePaid[0].value)
-//            cancelAndConsumeRemainingEvents()
-//        }
-//    }
-//
-//    @Test
-//    fun `When a 10 value expense has payment THEN don't show a expense with R$ 10,00`() = runTest {
-//        every { expenseDao.getAll() } returns flowOf(
-//            listOf(Expense("id", "teste", 10.0, 1))
-//        )
-//        every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
-//            listOf(ExpensePayment("idpayment", LocalDateTime.now(), 10.0, "id"))
-//        )
-//        every { assetDao.getAllFlow() } returns flowOf(emptyList())
-//
-//        target.state.test {
-//            assertEquals(emptyList<HomeContract.ExpenseToBePaid>(), awaitItem().expensesToBePaid)
-//            assertEquals(emptyList<HomeContract.ExpenseToBePaid>(), awaitItem().expensesToBePaid)
-//            cancelAndConsumeRemainingEvents()
-//        }
-//    }
-//
-//    @Test
-//    fun `When tap download expenses button THEN call download expenses use case`() = runTest {
-//        target.onEvent(HomeContract.Event.DownloadPriceUpdate)
-//
-//        coVerify {
-//            updateAssetsValueUseCase()
-//        }
-//    }
-//
-//    @Test
-//    fun `When tap paid button THEN call mark expenses as paid use case`() = runTest {
-//        val id = "id"
-//
-//        target.onEvent(HomeContract.Event.MarkExpenseAsPaid(id))
-//
-//        coVerify {
-//            markExpenseAsPaid(id)
-//        }
-//    }
+    @Test
+    fun `When a 10 value expense THEN total expenses is R$ 10,00`() = runTest {
+        every { expenseDao.getAll() } returns flowOf(
+            listOf(Expense("id", "teste", 10.0, 1))
+        )
+        every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(emptyList())
+        every { assetDao.getAllFlow() } returns flowOf(emptyList())
+
+        target.state.test {
+            assertEquals("", awaitItem().totalExpenses)
+            assertEquals("R$ 10,00", awaitItem().totalExpenses)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `When a 10 value expense and a 5 value payment THEN total expenses is R$ 10,00`() = runTest {
+        every { expenseDao.getAll() } returns flowOf(
+            listOf(Expense("id", "teste", 10.0, 1))
+        )
+        every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
+            listOf(ExpensePayment("idpayment", LocalDateTime.now(), 5.0, "id"))
+        )
+        every { assetDao.getAllFlow() } returns flowOf(emptyList())
+
+        target.state.test {
+            assertEquals("", awaitItem().totalExpenses)
+            assertEquals("R$ 10,00", awaitItem().totalExpenses)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `When a 10 value expense and a 5 value payment THEN total to be paid is R$ 5,00`() = runTest {
+        every { expenseDao.getAll() } returns flowOf(
+            listOf(Expense("id", "teste", 10.0, 1))
+        )
+        every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
+            listOf(ExpensePayment("idpayment", LocalDateTime.now(), 5.0, "id"))
+        )
+        every { assetDao.getAllFlow() } returns flowOf(emptyList())
+
+        target.state.test {
+            assertEquals("", awaitItem().totalExpensesToBePaid)
+            assertEquals("R$ 5,00", awaitItem().totalExpensesToBePaid)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `When a 10 value expense has no payment THEN show a expense with R$ 10,00`() = runTest {
+        every { expenseDao.getAll() } returns flowOf(
+            listOf(Expense("id", "teste", 10.0, 1))
+        )
+        every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
+            emptyList()
+        )
+        every { assetDao.getAllFlow() } returns flowOf(emptyList())
+
+        target.state.test {
+            assertEquals(emptyList<HomeContract.ExpenseToBePaid>(), awaitItem().expensesToBePaid)
+            assertEquals("R$ 10,00", awaitItem().expensesToBePaid[0].value)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `When a 10 value expense has payment THEN don't show a expense with R$ 10,00`() = runTest {
+        every { expenseDao.getAll() } returns flowOf(
+            listOf(Expense("id", "teste", 10.0, 1))
+        )
+        every { expensePaymentDao.getPaymentOfCurrentMonth() } returns flowOf(
+            listOf(ExpensePayment("idpayment", LocalDateTime.now(), 10.0, "id"))
+        )
+        every { assetDao.getAllFlow() } returns flowOf(emptyList())
+
+        target.state.test {
+            assertEquals(emptyList<HomeContract.ExpenseToBePaid>(), awaitItem().expensesToBePaid)
+            assertEquals(emptyList<HomeContract.ExpenseToBePaid>(), awaitItem().expensesToBePaid)
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `When tap download expenses button THEN call download expenses use case`() = runTest {
+        target.onEvent(HomeContract.Event.DownloadPriceUpdate)
+
+        coVerify {
+            updateAssetsValueUseCase()
+        }
+    }
+
+    @Test
+    fun `When tap paid button THEN call mark expenses as paid use case`() = runTest {
+        val id = "id"
+
+        target.onEvent(HomeContract.Event.MarkExpenseAsPaid(id))
+
+        coVerify {
+            markExpenseAsPaid(id)
+        }
+    }
 }
