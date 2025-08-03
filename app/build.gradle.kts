@@ -102,6 +102,7 @@ dependencies {
     testImplementation(libs.mockK)
     testImplementation(libs.cash.turbine)
     testImplementation(libs.coroutines.test)
+    testImplementation(libs.surefire.plugin)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
